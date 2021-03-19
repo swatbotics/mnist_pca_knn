@@ -12,6 +12,7 @@
 # dataset.
 
 import os, sys, struct, shutil, urllib.request, zipfile
+import datetime
 import cv2
 import numpy as np
 
@@ -638,6 +639,8 @@ def main():
     num_test = len(test_images)
 
     total_errors = 0
+
+    start = datetime.datetime.now()
     
     print(f'evaluating knn accuracy with k={knn_k}...')
 
@@ -655,7 +658,10 @@ def main():
         total_errors += (labels_true != labels_pred).sum()
         error_rate = 100.0 * total_errors / end_idx
 
-        print(f'error rate after {end_idx} test examples is {error_rate:.2f}%')
+        print(f'{total_errors:4d} errors after {end_idx:5d} test examples (error rate={error_rate:.2f}%)')
+
+    elapsed = (datetime.datetime.now() - start).total_seconds()
+    print(f'total time={elapsed:.2f} seconds ({elapsed/end_idx:.4f}s per image)')
 
 if __name__ == '__main__':
     main()
